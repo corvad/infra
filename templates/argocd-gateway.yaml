@@ -1,27 +1,27 @@
-apiVersion: traefik.io/v1alpha1
-kind: IngressRoute
-metadata:
-  name: argocd-server
-  namespace: argocd
-spec:
-  entryPoints:
-    - websecure
-  routes:
-    - kind: Rule
-      match: Host(`argocd.corvaglia.dev`)
-      priority: 10
-      services:
-        - name: argocd-server
-          port: 80
-    - kind: Rule
-      match: Host(`argocd.corvaglia.dev`) && Headers(`Content-Type`, `application/grpc`)
-      priority: 11
-      services:
-        - name: argocd-server
-          port: 80
-          scheme: h2c
-  tls:
-    secretName: argocd-tls
+# apiVersion: traefik.io/v1alpha1
+# kind: IngressRoute
+# metadata:
+#   name: argocd-server
+#   namespace: argocd
+# spec:
+#   entryPoints:
+#     - websecure
+#   routes:
+#     - kind: Rule
+#       match: Host(`argocd.corvaglia.dev`)
+#       priority: 10
+#       services:
+#         - name: argocd-server
+#           port: 80
+#     - kind: Rule
+#       match: Host(`argocd.corvaglia.dev`) && Headers(`Content-Type`, `application/grpc`)
+#       priority: 11
+#       services:
+#         - name: argocd-server
+#           port: 80
+#           scheme: h2c
+#   tls:
+#     secretName: argocd-tls
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
@@ -42,15 +42,13 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-prod
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
+  name: letsencrypt
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
     email: admin@corvaglia.dev
     privateKeySecretRef:
-      name: letsencrypt-prod
+      name: letsencrypt
     solvers:
     - http01:
         ingress:
