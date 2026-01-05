@@ -1,19 +1,24 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argocd
+  name: cert-manager
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: argocd
-    server: {{ .Values.spec.destination.server }}
-  project: default
+    namespace: door
+    server: https://kubernetes.default.svc
+  project: door
   source:
-    path: manifests
-    repoURL: https://github.com/argoproj/argo-cd
-    targetRevision: stable
+    chart: cert-manager
+    repoURL: https://charts.jetstack.io
+    targetRevision: v1.19.2
+    helm:
+      releaseName: cert-manager
+      values: |
+        crds:
+          enabled: true
   syncPolicy:
     automated:
       enabled: true

@@ -1,11 +1,35 @@
+# Projects are managed inline in this file for simplicity
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: test
+  name: door
+  namespace: argocd
 spec:
-  sourceRepos: []
-  sourceNamespaces: []
-  destinations: []
-  namespaceResourceBlacklist:
+  description: Door to the world
+  sourceRepos:
+  - 'https://github.com/corvad/infra'
+  destinations:
+  - namespace: door
+    server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+  - group: ''
+    kind: Namespace
+  - group: ''
+    kind: ServiceAccount
+  - group: 'rbac.authorization.k8s.io'
+    kind: ClusterRole
+  - group: 'rbac.authorization.k8s.io'
+    kind: ClusterRoleBinding
+  - group: 'rbac.authorization.k8s.io'
+    kind: Role
+  - group: 'rbac.authorization.k8s.io'
+    kind: RoleBinding
+  - group: 'apiextensions.k8s.io'
+    kind: CustomResourceDefinition
+  - group: 'admissionregistration.k8s.io'
+    kind: MutatingWebhookConfiguration
+  - group: 'admissionregistration.k8s.io'
+    kind: ValidatingWebhookConfiguration
+  namespaceResourceWhitelist:
   - group: '*'
     kind: '*'
