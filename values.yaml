@@ -1,15 +1,3 @@
-config:
-  spec:
-    destination:
-      server: https://kubernetes.default.svc
-    source:
-      repoURL: https://github.com/corvad/infra
-      targetRevision: main
-
-applications:
-  - name: argocd
-    namespace: argocd
-    path: argo-cd
-    tool:
-      helm:
-        releaseName: argocd
+spec:
+  destination:
+    server: https://kubernetes.default.svc
