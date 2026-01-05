@@ -1,4 +1,68 @@
 # Projects are managed inline in this file for simplicity
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cert-manager
+  namespace: argocd
+spec:
+  description: Cert Manager Project
+  sourceRepos:
+  - 'https://charts.jetstack.io'
+  destinations:
+  - namespace: cert-manager
+    server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+  - group: 'apiextensions.k8s.io'
+    kind: CustomResourceDefinition
+  - group: 'admissionregistration.k8s.io'
+    kind: MutatingWebhookConfiguration
+  - group: 'admissionregistration.k8s.io'
+    kind: ValidatingWebhookConfiguration
+  namespaceResourceWhitelist:
+  - group: '*'
+    kind: '*'
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: traefik
+  namespace: argocd
+spec:
+  description: Traefik Ingress Project
+  sourceRepos:
+  - 'https://traefik.github.io/charts'
+  destinations:
+  - namespace: traefik
+    server: https://kubernetes.default.svc
+  namespaceResourceWhitelist:
+  - group: '*'
+    kind: '*'
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  description: ArgoCD Project
+  sourceRepos:
+  - 'https://github.com/argoproj/argo-cd'
+  - 'https://github.com/corvad/infra'
+  destinations:
+  - namespace: argocd
+    server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+  - group: 'apiextensions.k8s.io'
+    kind: CustomResourceDefinition
+  - group: 'admissionregistration.k8s.io'
+    kind: MutatingWebhookConfiguration
+  - group: 'admissionregistration.k8s.io'
+    kind: ValidatingWebhookConfiguration
+  namespaceResourceWhitelist:
+  - group: '*'
+    kind: '*'
+---
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
@@ -11,25 +75,6 @@ spec:
   destinations:
   - namespace: door
     server: https://kubernetes.default.svc
-  clusterResourceWhitelist:
-  - group: ''
-    kind: Namespace
-  - group: ''
-    kind: ServiceAccount
-  - group: 'rbac.authorization.k8s.io'
-    kind: ClusterRole
-  - group: 'rbac.authorization.k8s.io'
-    kind: ClusterRoleBinding
-  - group: 'rbac.authorization.k8s.io'
-    kind: Role
-  - group: 'rbac.authorization.k8s.io'
-    kind: RoleBinding
-  - group: 'apiextensions.k8s.io'
-    kind: CustomResourceDefinition
-  - group: 'admissionregistration.k8s.io'
-    kind: MutatingWebhookConfiguration
-  - group: 'admissionregistration.k8s.io'
-    kind: ValidatingWebhookConfiguration
   namespaceResourceWhitelist:
   - group: '*'
     kind: '*'

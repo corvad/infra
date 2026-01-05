@@ -7,9 +7,9 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: door
+    namespace: cert-manager
     server: https://kubernetes.default.svc
-  project: door
+  project: cert-manager
   source:
     chart: cert-manager
     repoURL: https://charts.jetstack.io

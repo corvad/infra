@@ -9,7 +9,7 @@ spec:
   destination:
     namespace: argocd
     server: {{ .Values.spec.destination.server }}
-  project: default
+  project: argocd
   source:
     path: manifests
     repoURL: https://github.com/argoproj/argo-cd

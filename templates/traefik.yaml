@@ -7,9 +7,9 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: door
+    namespace: traefik
     server: https://kubernetes.default.svc
-  project: door
+  project: traefik
   source:
     chart: traefik
     repoURL: https://traefik.github.io/charts
