@@ -11,6 +11,6 @@ spec:
     server: {{ .Values.spec.destination.server }}
   project: default
   source:
-    path: charts/argo-cd/Chart.yaml
-    repoURL: https://github.com/argoproj/argo-helm
-    targetRevision: HEAD
+    path: manifests
+    repoURL: https://github.com/argoproj/argo-cd
+    targetRevision: stable
