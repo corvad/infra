@@ -14,8 +14,3 @@ spec:
     path: manifests
     repoURL: https://github.com/argoproj/argo-cd
     targetRevision: stable
-  syncPolicy:
-    automated:
-      enabled: true
-      prune: true
-      selfHeal: true
