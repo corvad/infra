@@ -9,8 +9,3 @@ spec:
   namespaceResourceBlacklist:
   - group: '*'
     kind: '*'
-  syncPolicy:
-    automated:
-      enabled: true
-      prune: true
-      selfHeal: true
