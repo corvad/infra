@@ -91,15 +91,24 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: door
+  name: reflector
   namespace: argocd
 spec:
-  description: Door to the world
+  description: Reflector Project
   sourceRepos:
-  - 'https://github.com/corvad/infra'
+  - 'https://emberstack.github.io/helm-charts'
   destinations:
-  - namespace: door
+  - namespace: reflector
     server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+  - group: 'apiextensions.k8s.io'
+    kind: CustomResourceDefinition
+  - group: 'rbac.authorization.k8s.io'
+    kind: ClusterRole
+  - group: 'rbac.authorization.k8s.io'
+    kind: ClusterRoleBinding
+  - group: ''
+    kind: Namespace
   namespaceResourceWhitelist:
   - group: '*'
     kind: '*'
