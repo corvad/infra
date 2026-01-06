@@ -3,6 +3,9 @@ kind: Issuer
 metadata:
   name: letsencrypt-argocd
   namespace: argocd
+  labels:
+    project: argocd
+    app: argocd-ingress
 spec:
   acme:
     email: root@corvaglia.dev
@@ -20,6 +23,9 @@ kind: Certificate
 metadata:
   name: letsencrypt-argocd-certificate
   namespace: argocd
+  labels:
+    project: argocd
+    app: argocd-ingress
 spec:
   secretName: letsencrypt-argocd-tls
   issuerRef:
@@ -33,6 +39,9 @@ kind: IngressRoute
 metadata:
   name: argocd-server
   namespace: argocd
+  labels:
+    project: argocd
+    app: argocd-ingress
 spec:
   entryPoints:
     - websecure
@@ -42,13 +51,13 @@ spec:
       priority: 10
       services:
         - name: argocd-server
-          port: 80
+          port: 8080
     - kind: Rule
       match: Host(`argocd.corvaglia.dev`) && Header(`Content-Type`, `application/grpc`)
       priority: 11
       services:
         - name: argocd-server
-          port: 80
+          port: 8080
           scheme: h2c
   tls:
     certResolver: letsencrypt-argocd-tls
