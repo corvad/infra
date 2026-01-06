@@ -66,4 +66,4 @@ spec:
           port: 80
           scheme: h2c
   tls:
-    certResolver: letsencrypt-argocd-tls
+    secretName: letsencrypt-argocd-tls
