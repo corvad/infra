@@ -23,6 +23,15 @@ spec:
         ingressRoute:
           dashboard:
             enabled: false
+        ports:
+          web:
+            redirections:
+              entryPoint:
+                to: websecure
+                scheme: https
+                permanent: true
+        deployment:
+          replicas: 3
   syncPolicy:
     automated:
       enabled: true
