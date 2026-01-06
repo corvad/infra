@@ -43,7 +43,7 @@ spec:
             proxyProtocol:
               trustedIPs: *TrustedIPs
         deployment:
-          replicas: 3
+          replicas: 1
   syncPolicy:
     automated:
       enabled: true
