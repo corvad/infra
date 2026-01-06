@@ -22,9 +22,14 @@ spec:
           - 10.0.0.0/8
         logs:
           general:
-            level: INFO
+            level:INFO
           access:
             enabled: true
+            filters:
+              statusCodes:
+                - "200"
+                - "400-404"
+                - "500-503"
         ingressRoute:
           dashboard:
             enabled: false
