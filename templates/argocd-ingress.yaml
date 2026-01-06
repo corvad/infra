@@ -28,6 +28,10 @@ metadata:
     app: argocd-ingress
 spec:
   secretName: letsencrypt-argocd-tls
+  secretTemplate:
+    annotations:
+      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "traefik"
   issuerRef:
     name: letsencrypt-argocd
   commonName: argocd.corvaglia.dev
