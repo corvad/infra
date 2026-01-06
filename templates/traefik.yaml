@@ -23,8 +23,8 @@ spec:
         logs:
           general:
             level: INFO
-        accessLog:
-          enabled: true
+          access:
+            enabled: true
         ingressRoute:
           dashboard:
             enabled: false
