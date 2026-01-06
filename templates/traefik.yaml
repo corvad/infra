@@ -31,16 +31,16 @@ spec:
                 scheme: https
                 permanent: true
             forwardedHeaders:
-              trustedIPs: []
+              trustedIPs: [0.0.0.0/0]
             proxyProtocol:
-              trustedIPs: []
+              trustedIPs: [0.0.0.0/0]
           websecure:
             forwardedHeaders:
-              trustedIPs: []
+              trustedIPs: [0.0.0.0/0]
             proxyProtocol:
-              trustedIPs: []
+              trustedIPs: [0.0.0.0/0]
         deployment:
-          replicas: 3
+          replicas: 1
   syncPolicy:
     automated:
       enabled: true
