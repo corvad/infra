@@ -17,6 +17,9 @@ spec:
     helm:
       releaseName: traefik
       values: |
+        .TrustedIPs: &TrustedIPs
+          - 127.0.0.1/32
+          - 10.0.0.0/24
         logs:
           general:
             level: DEBUG
@@ -31,14 +34,14 @@ spec:
                 scheme: https
                 permanent: true
             forwardedHeaders:
-              trustedIPs: [10.0.0.0/16]
+              trustedIPs: *TrustedIPs
             proxyProtocol:
-              trustedIPs: [10.0.0.0/16]
+              trustedIPs: *TrustedIPs
           websecure:
             forwardedHeaders:
-              trustedIPs: [10.0.0.0/16]
+              trustedIPs: *TrustedIPs
             proxyProtocol:
-              trustedIPs: [10.0.0.0/16]
+              trustedIPs: *TrustedIPs
         deployment:
           replicas: 3
   syncPolicy:
