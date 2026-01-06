@@ -46,6 +46,9 @@ spec:
               trustedIPs: *TrustedIPs
         deployment:
           replicas: 1
+        service:
+          enabled: true
+          type: LoadBalancer
   syncPolicy:
     automated:
       enabled: true
