@@ -32,7 +32,6 @@ spec:
         repoServer:
           replicas: 2
 applicationSet:
-  replicas: 2
   syncPolicy:
     automated:
       enabled: true
