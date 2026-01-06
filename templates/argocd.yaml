@@ -12,13 +12,13 @@ spec:
   project: argocd
   source:
     chart: argo-cd
-    repoURL: https://github.com/argoproj/argo-helm
+    repoURL: https://argoproj.github.io/argo-helm
     targetRevision: 9.2.4
     helm:
-    values: |
-      configs:
-        params:
-          server.insecure: "true"
+      values: |
+        configs:
+          params:
+            server.insecure: "true"
   syncPolicy:
     automated:
       enabled: true
