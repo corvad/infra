@@ -22,7 +22,7 @@ spec:
           - 10.0.0.0/24
         logs:
           general:
-            level: DEBUG
+            level: TRACE
         ingressRoute:
           dashboard:
             enabled: false
