@@ -40,7 +40,7 @@ spec:
             proxyProtocol:
               trustedIPs: [10.0.0.0/16]
         deployment:
-          replicas: 1
+          replicas: 3
   syncPolicy:
     automated:
       enabled: true
