@@ -14,11 +14,6 @@ spec:
     chart: argo-cd
     repoURL: https://argoproj.github.io/argo-helm
     targetRevision: 9.2.4
-    helm:
-      values: |
-        configs:
-          params:
-            server.insecure: "true"
   syncPolicy:
     automated:
       enabled: true
