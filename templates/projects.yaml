@@ -68,7 +68,7 @@ metadata:
 spec:
   description: ArgoCD Project
   sourceRepos:
-  - 'https://github.com/argoproj/argo-cd'
+  - 'https://github.com/argoproj/argo-helm'
   - 'https://github.com/corvad/infra'
   destinations:
   - namespace: argocd
