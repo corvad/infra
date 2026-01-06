@@ -17,8 +17,6 @@ spec:
     helm:
       releaseName: traefik
       values: |
-        gatewayAPI:
-          enabled: true
         ingressRoute:
           dashboard:
             enabled: false
