@@ -21,3 +21,13 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cmd-params-cm
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+data:
+  server.insecure: "true"
