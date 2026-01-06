@@ -11,9 +11,13 @@ spec:
     server: {{ .Values.spec.destination.server }}
   project: argocd
   source:
-    path: manifests
-    repoURL: https://github.com/argoproj/argo-cd
+    repoURL: https://github.com/argoproj/argo-helm
     targetRevision: stable
+    helm:
+    values: |
+      configs:
+        params:
+          server.insecure: "true"
   syncPolicy:
     automated:
       enabled: true
@@ -21,14 +25,3 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: argocd-cmd-params-cm
-  namespace: argocd
-data:
-  server.insecure: "true"
-labels:
-  app.kubernetes.io/name: argocd-cmd-params-cm
-  app.kubernetes.io/part-of: argocd
