@@ -16,9 +16,9 @@ spec:
     targetRevision: 9.2.4
     helm:
       values: |
-
         configs:
-          param
+          params:
+            server.insecure: true
 
         redis-ha:
           enabled: true
@@ -31,7 +31,6 @@ spec:
 
         repoServer:
           replicas: 2
-
 applicationSet:
   replicas: 2
   syncPolicy:
