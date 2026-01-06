@@ -19,7 +19,7 @@ spec:
       values: |
         logs:
           general:
-            level: INFO
+            level: DEBUG
         ingressRoute:
           dashboard:
             enabled: false
