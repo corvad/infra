@@ -1,0 +1,35 @@
+---
+- name: Initialize Cluster
+  hosts: control-plane
+  become: yes
+  tasks:
+    - name: Ensure k3s is installed on control plane nodes
+      ansible.builtin.shell: |
+        curl -sfL https://get.k3s.io | K3S_TOKEN={{ k3s_token }} sh -s - server \
+        --cluster-init \
+        --tls-san $(hostname -I | awk '{ print $2 }') \
+        --node-ip $(hostname -I | awk '{ print $2 }') \
+        --advertise-address $(hostname -I | awk '{ print $2 }')
+      when: inventory_hostname == groups['control-plane'][0]
+- name: Initialize Other Control Plane Nodes
+  hosts: control-plane
+  become: yes
+  tasks:
+    - name: Ensure k3s is installed on other control plane nodes
+      ansible.builtin.shell: |
+        curl -sfL https://get.k3s.io | K3S_TOKEN={{ k3s_token }} sh -s - server \
+        --server https://10.0.0.2:6443 \
+        --tls-san $(hostname -I | awk '{ print $2 }') \
+        --node-ip $(hostname -I | awk '{ print $2 }') \
+        --advertise-address $(hostname -I | awk '{ print $2 }')
+      when: inventory_hostname != groups['control-plane'][0]
+- name: Initialize K3s Worker Nodes
+  hosts: worker
+  become: yes
+  tasks:
+    - name: Ensure k3s is installed on worker nodes
+      ansible.builtin.shell: |
+        curl -sfL https://get.k3s.io | K3S_TOKEN={{ k3s_token }} sh -s - agent \
+            --server https://10.0.0.2:6443 \
+            --node-ip $(hostname -I | awk '{ print $2 }') \
+            --bind-address $(hostname -I | awk '{ print $2 }')

@@ -1,1 +1,0 @@
-TODO: will contain the ansible configs to bootstrap the k3s cluster on newly deployed servers. This is mainly for initial low level access to the servers. In the future I could probably use skyhook from nvidia for this as it seems to be pretty good at exactly the tasks I want.

@@ -1,41 +1,51 @@
 resource "hcloud_server" "controlPlaneNode" {
-  count = var.controlPlaneNodeCount
-  name  = "control-plane-${count.index}"
-  location = var.region
-  image = var.os_image
+  count       = var.controlPlaneNodeCount
+  name        = "control-plane-${count.index}"
+  location    = var.region
+  image       = var.os_image
   server_type = var.controlPlaneNodeType
   network {
     network_id = hcloud_network.network.id
-    ip = "10.0.0.${count.index + 2}"
+    ip         = "10.0.0.${count.index + 2}"
   }
   public_net {
     ipv4_enabled = true
     ipv6_enabled = false
   }
+  ssh_keys = [hcloud_ssh_key.ssh-key.id]
   labels = {
-    "role" = "control-plane"
+    "role"       = "control-plane"
     "managed-by" = "terraform"
   }
-  depends_on = [ hcloud_network_subnet.network-subnet ]
+  depends_on = [hcloud_network_subnet.network-subnet]
 }
 
 resource "hcloud_server" "workerNode" {
-  count = var.workerNodeCount
-  name  = "worker-node-${count.index}"
-  location = var.region
-  image = var.os_image
+  count       = var.workerNodeCount
+  name        = "worker-node-${count.index}"
+  location    = var.region
+  image       = var.os_image
   server_type = var.workerNodeType
   network {
     network_id = hcloud_network.network.id
-    ip = "10.0.0.${count.index + var.controlPlaneNodeCount + 2}"
+    ip         = "10.0.0.${count.index + var.controlPlaneNodeCount + 2}"
   }
   public_net {
     ipv4_enabled = true
     ipv6_enabled = false
   }
+  ssh_keys  = [hcloud_ssh_key.ssh-key.id]
   labels = {
-    "role"="worker"
+    "role"       = "worker"
     "managed-by" = "terraform"
   }
-  depends_on = [ hcloud_network_subnet.network-subnet ]
+  depends_on = [hcloud_network_subnet.network-subnet]
+}
+
+resource "hcloud_ssh_key" "ssh-key" {
+  name       = "ssh-key"
+  public_key = var.sshPublicKey
+  labels = {
+    "managed-by" = "terraform"
+  }
 }

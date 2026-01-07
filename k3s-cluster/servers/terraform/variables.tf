@@ -42,3 +42,8 @@ variable "loadBalancerType" {
   default = "lb11"
   description = "Type of load balancer."
 }
+
+variable "sshPublicKey" {
+  type = string
+  description = "SSH public key for accessing the nodes."
+}
