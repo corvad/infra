@@ -1,0 +1,1 @@
+This folder contains infrastructure configs (Terraform and Ansible) to deploy a k3s cluster on Hetzner Cloud and also the argocd configurations to deploy applications on top of the cluster.

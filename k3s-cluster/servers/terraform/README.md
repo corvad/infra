@@ -1,0 +1,1 @@
+This directory contains Terraform configuration files for deploying and managing the server infrastructure of a K3s cluster. It sets up the basic infrastructure, i.e. servers, neworking, firewalls, that the cluster on Hetzner Cloud uses.
