@@ -1,0 +1,1 @@
+This directory contains Terraform configuration files for deploying and managing the server infrastructure for git and jenkins.

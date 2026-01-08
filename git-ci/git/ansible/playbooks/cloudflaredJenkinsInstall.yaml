@@ -1,0 +1,20 @@
+---
+- name: Configure cloudflared on Jenkins server
+  hosts: jenkins
+  become: yes
+  vars_files:
+    - ../values.yaml
+  tasks:
+    - name: Download the cloudflared Linux package.
+      shell: wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+    - name: Depackage cloudflared.
+      shell: sudo dpkg -i cloudflared-linux-amd64.deb
+    - name: Install the tunnel as a systemd service.
+      shell: "cloudflared service install {{ jenkins_tunnel_token }}"
+      no_log: true
+    - name: Start the tunnel.
+      systemd:
+        name: cloudflared
+        state: started
+        enabled: true
+        masked: no
