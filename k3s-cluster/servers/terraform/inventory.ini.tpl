@@ -1,9 +1,8 @@
-[control-plane]
+[control_plane]
 %{ for ip in control_plane_ips ~}
 ${ip}
 %{ endfor ~}
-
-[worker]
+[agent]
 %{ for ip in worker_node_ips ~}
 ${ip}
 %{ endfor ~}

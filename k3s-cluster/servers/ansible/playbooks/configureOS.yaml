@@ -1,0 +1,32 @@
+---
+- name: Initialize the k3s cluster os
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update OS packages
+      ansible.builtin.apt:
+        update_cache: yes
+        upgrade: dist
+        autoremove: yes
+        autoclean: yes
+    - name: Install required packages
+      ansible.builtin.apt:
+        name:
+          - curl
+          - apt-transport-https
+          - gpg
+        state: present
+    - name: Add GPG key for Helm
+      ansible.builtin.shell:
+        cmd: curl -fsSL https://packages.buildkite.com/helm-linux/helm-debian/gpgkey | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+        creates: /usr/share/keyrings/helm.gpg
+    - name: Add Helm apt repo
+      ansible.builtin.apt_repository:
+        repo: "deb [signed-by=/usr/share/keyrings/helm.gpg] https://packages.buildkite.com/helm-linux/helm-debian/any/ any main"
+        state: present
+        filename: helm
+    - name: Update and install Helm
+      ansible.builtin.apt:
+        name:
+          - helm
+        update_cache: yes

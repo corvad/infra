@@ -1,0 +1,31 @@
+---
+- name: Initialize the k3s cluster
+  hosts: all
+  become: yes
+  tasks:
+    - name: Setup first k3s server node
+      when: inventory_hostname in groups['control_plane'] and ansible_play_hosts.index(inventory_hostname) == 0
+      ansible.builtin.shell:
+        cmd: |
+          curl -sfL https://get.k3s.io | sh -s - server --cluster-init --tls-san $(hostname -I | awk '{ print $2 }') --node-ip $(hostname -I | awk '{ print $2 }') --advertise-address $(hostname -I | awk '{ print $2 }')
+        creates: /etc/rancher/k3s/k3s.yaml
+    - name: Get k3s join token
+      when: inventory_hostname in groups['control_plane'] and ansible_play_hosts.index(inventory_hostname) == 0
+      ansible.builtin.shell:
+        cmd: cat /var/lib/rancher/k3s/server/node-token
+      register: k3s_token
+      no_log: true
+    - name: Setup additional k3s server nodes
+      when: inventory_hostname in groups['control_plane'] and ansible_play_hosts.index(inventory_hostname) != 0
+      ansible.builtin.shell:
+        cmd: |
+          curl -sfL https://get.k3s.io | K3S_TOKEN={{ hostvars[groups['control_plane'][0]].k3s_token.stdout }} sh -s - server --server https://10.0.0.2:6443 --tls-san $(hostname -I | awk '{ print $2 }') --node-ip $(hostname -I | awk '{ print $2 }') --advertise-address $(hostname -I | awk '{ print $2 }')
+        creates: /etc/rancher/k3s/k3s.yaml
+      no_log: true
+    - name: Setup k3s agent nodes
+      when: inventory_hostname in groups['agent']
+      ansible.builtin.shell:
+        cmd: |
+          curl -sfL https://get.k3s.io | K3S_TOKEN={{ hostvars[groups['control_plane'][0]].k3s_token.stdout }} sh -s - agent --server https://10.0.0.2:6443 --node-ip $(hostname -I | awk '{ print $2 }') --advertise-address $(hostname -I | awk '{ print $2 }')
+        creates: /etc/rancher/k3s/k3s.yaml
+      no_log: true

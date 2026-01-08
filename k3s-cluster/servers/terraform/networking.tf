@@ -64,6 +64,7 @@ resource "hcloud_load_balancer" "load-balancer" {
   name               = "load-balancer"
   load_balancer_type = var.loadBalancerType
   location           = var.region
+  depends_on         = [hcloud_network_subnet.network-subnet]
 }
 
 resource "hcloud_load_balancer_network" "attachment" {
@@ -78,6 +79,7 @@ resource "hcloud_load_balancer_target" "control-plane-targets" {
   load_balancer_id = hcloud_load_balancer.load-balancer.id
   label_selector   = "role=control-plane"
   use_private_ip   = true
+  depends_on       = [hcloud_load_balancer_network.attachment]
 }
 
 resource "hcloud_load_balancer_target" "worker-targets" {
@@ -85,6 +87,7 @@ resource "hcloud_load_balancer_target" "worker-targets" {
   load_balancer_id = hcloud_load_balancer.load-balancer.id
   label_selector   = "role=worker"
   use_private_ip   = true
+  depends_on       = [hcloud_load_balancer_network.attachment]
 }
 
 resource "hcloud_load_balancer_service" "web-service" {
@@ -99,6 +102,7 @@ resource "hcloud_load_balancer_service" "web-service" {
     timeout  = 5
     retries  = 3
   }
+  depends_on = [hcloud_load_balancer_network.attachment]
 }
 
 resource "hcloud_load_balancer_service" "websecure-service" {
@@ -113,4 +117,5 @@ resource "hcloud_load_balancer_service" "websecure-service" {
     timeout  = 5
     retries  = 3
   }
+  depends_on = [hcloud_load_balancer_network.attachment]
 }
