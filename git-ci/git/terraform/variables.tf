@@ -18,6 +18,11 @@ variable "jenkinsNodeType" {
   description = "Type of jenkins node."
 }
 
+variable "authNodeType" {
+  default = "cpx11"
+  description = "Type of authentication node."
+}
+
 variable "sshPublicKey" {
   type = string
   description = "SSH public key for accessing the nodes."

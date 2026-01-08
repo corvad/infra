@@ -1,0 +1,72 @@
+---
+- name: Configure Gerrit site
+  hosts: gerrit
+  become: yes
+  vars:
+    gerrit_version: 3.13.0
+  tasks:
+    - name: Install Java
+      apt:
+        name:
+          - openjdk-21-jdk-headless
+          - git
+        state: present
+        update_cache: yes
+
+    - name: Create cloudflaredGerritInstallerrit system user
+      user:
+        name: "gerrit"
+        system: yes
+        home: "/home/gerrit"
+        shell: /bin/bash
+        state: present
+
+    - name: Create Gerrit home directory
+      file:
+        path: "/home/gerrit/site"
+        owner: "gerrit"
+        group: "gerrit"
+        mode: '0755'
+        state: directory
+
+    - name: Download Gerrit WAR file
+      get_url:
+        url: "https://gerrit-releases.storage.googleapis.com/gerrit-{{ gerrit_version }}.war"
+        dest: "/home/gerrit/gerrit.war"
+        owner: "gerrit"
+        group: "gerrit"
+        mode: '0644'
+        force: true
+
+    - name: Initialize Gerrit site
+      command: "java -jar /home/gerrit/gerrit.war init -d /home/gerrit/site --no-auto-start --install-all-plugins"
+      become_user: "gerrit"
+
+    - name: Create Gerrit systemd service file
+      copy:
+        dest: /etc/systemd/system/gerrit.service
+        content: |
+          [Unit]
+          Description=Gerrit Code Review
+          After=network.target
+
+          [Service]
+          Type=simple
+          Environment=GERRIT_SITE=/home/gerrit/site
+          ExecStart=/home/gerrit/site/bin/gerrit.sh run
+          ExecStop=/home/gerrit/site/bin/gerrit.sh stop
+          User=gerrit
+          Group=gerrit
+          StandardOutput=journal
+          StandardError=journal
+
+          [Install]
+          WantedBy=multi-user.target
+        mode: '0644'
+
+    - name: Enable and start Gerrit service
+      systemd:
+        name: gerrit
+        enabled: true
+        state: restarted
+        daemon_reload: yes

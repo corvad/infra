@@ -1,0 +1,30 @@
+---
+- name: Update Gerrit
+  hosts: gerrit
+  become: yes
+  vars:
+    gerrit_version: 3.13.1
+  tasks:
+    - name: Download the latest Gerrit WAR file
+      get_url:
+        url: "https://gerrit-releases.storage.googleapis.com/gerrit-{{ gerrit_version }}.war"
+        dest: "/home/gerrit/gerrit.war"
+        owner: "gerrit"
+        group: "gerrit"
+        mode: '0644'
+        force: true
+
+    - name: Stop Gerrit service
+      systemd:
+        name: gerrit
+        state: stopped
+
+    - name: Initialize new Gerrit site
+      command: "java -jar /home/gerrit/gerrit.war init -d /home/gerrit/site --no-auto-start --install-all-plugins"
+      become_user: "gerrit"
+
+    - name: Start Gerrit service
+      systemd:
+        name: gerrit
+        state: restarted
+        enabled: true
