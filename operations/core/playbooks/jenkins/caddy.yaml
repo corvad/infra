@@ -1,0 +1,64 @@
+---
+- name: Configure caddy
+  hosts: jenkins
+  become: yes
+  tasks:
+    - name: Install dependencies for Caddy repository
+      ansible.builtin.get_url:
+        url: https://dl.cloudsmith.io/public/caddy/stable/gpg.key
+        dest: /etc/apt/keyrings/caddy-keyring.asc
+        mode: '0644'
+        force: true
+
+    - name: Add Caddy repository
+      ansible.builtin.apt_repository:
+        repo: deb [signed-by=/etc/apt/keyrings/caddy-keyring.asc] https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main
+        state: present
+
+    - name: Update package cache
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Install Caddy
+      ansible.builtin.apt:
+        name: caddy
+        state: present
+
+    - name: Gather service facts
+      ansible.builtin.service_facts:
+
+    - name: If caddy service installed stop it
+      ansible.builtin.systemd:
+        name: caddy
+        state: stopped
+      when: ansible_facts.services['caddy.service'] is defined
+
+    - name: Ensure caddy system user
+      user:
+        name: "caddy"
+        system: yes
+        home: "/home/caddy"
+        state: present
+        shell: /usr/sbin/nologin
+
+    - name: Ensure Caddyfile
+      ansible.builtin.template:
+        src: Caddyfile.j2
+        dest: /etc/caddy/Caddyfile
+        mode: "0644"
+
+    - name: Configure Caddyfile for Jenkins
+      ansible.builtin.template:
+        src: caddy.service.j2
+        dest: /etc/systemd/system/caddy.service
+        mode: "0644"
+
+    - name: Reload systemd daemon
+      ansible.builtin.systemd:
+        daemon_reload: yes
+
+    - name: Restart caddy service
+      ansible.builtin.systemd:
+        name: caddy
+        state: restarted
+        enabled: true

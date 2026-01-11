@@ -1,0 +1,17 @@
+[Unit]
+Description=Gerrit Code Review
+After=network.target
+
+[Service]
+Type=simple
+Environment=GERRIT_SITE=/home/gerrit/site
+ExecStart=/home/gerrit/site/bin/gerrit.sh run
+ExecStop=/home/gerrit/site/bin/gerrit.sh stop
+User=gerrit
+Group=gerrit
+StandardOutput=journal
+StandardError=journal
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+
+[Install]
+WantedBy=multi-user.target

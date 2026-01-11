@@ -1,0 +1,28 @@
+---
+- name: Ensure Gerrit configuration file
+  hosts: gerrit
+  become: yes
+  vars_files:
+    - ../../values.yaml
+  tasks:
+
+    - name: Ensure Gerrit configuration file
+      ansible.builtin.template:
+        src: gerrit.config.j2
+        dest: /home/gerrit/site/etc/gerrit.config
+        owner: gerrit
+        group: gerrit
+        mode: '0644'
+
+    - name: Ensure Gitiles configuration file
+      ansible.builtin.template:
+        src: gitiles.config.j2
+        dest: /home/gerrit/site/etc/gitiles.config
+        owner: gerrit
+        group: gerrit
+        mode: '0644'
+
+    - name: Restart gerrit service
+      ansible.builtin.systemd:
+        name: gerrit
+        state: restarted

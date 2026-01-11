@@ -1,0 +1,17 @@
+---
+- name: Ensure Jenkins deps
+  hosts: jenkins
+  become: yes
+  tasks:
+
+    - name: Ensure OpenJDK 21
+      apt:
+        name: openjdk-21-jdk
+        state: present
+        update_cache: yes
+
+    - name: Ensure fontconfig
+      apt:
+        name: fontconfig
+        state: present
+        update_cache: yes

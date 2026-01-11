@@ -1,0 +1,38 @@
+---
+- name: Install Gerrit plugins
+  hosts: gerrit
+  become: yes
+  vars_files:
+    - ../../values.yaml
+  tasks:
+
+    - name: Ensure plugins directory exists
+      file:
+        path: "/home/gerrit/site/plugins"
+        owner: "gerrit"
+        group: "gerrit"
+        mode: '0755'
+        state: directory
+
+    - name: Ensure admin-console plugin
+      get_url:
+        url: "https://gerrit-ci.gerritforge.com/view/Plugins-stable-3.13/job/plugin-admin-console-bazel-master-stable-3.13/lastSuccessfulBuild/artifact/bazel-bin/plugins/admin-console/admin-console.jar"
+        dest: "/home/gerrit/site/plugins/admin-console.jar"
+        force: true
+        owner: "gerrit"
+        group: "gerrit"
+        mode: '0644'
+
+    - name: Ensure checks-jenkins plugin
+      get_url:
+        url: "https://gerrit-ci.gerritforge.com/job/plugin-checks-jenkins-bazel-master/lastSuccessfulBuild/artifact/bazel-bin/plugins/checks-jenkins/checks-jenkins.jar"
+        dest: "/home/gerrit/site/plugins/checks-jenkins.jar"
+        force: true
+        owner: "gerrit"
+        group: "gerrit"
+        mode: '0644'
+
+    - name: Restart gerrit service
+      ansible.builtin.systemd:
+        name: gerrit
+        state: restarted

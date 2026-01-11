@@ -2,8 +2,8 @@
 - name: Configure Gerrit site
   hosts: gerrit
   become: yes
-  vars:
-    gerrit_version: 3.13.0
+  vars_files:
+    - ../../values.yaml
   tasks:
     - name: Install Java
       apt:
@@ -13,7 +13,7 @@
         state: present
         update_cache: yes
 
-    - name: Create cloudflaredGerritInstallerrit system user
+    - name: Create gerrit system user
       user:
         name: "gerrit"
         system: yes
@@ -21,9 +21,17 @@
         shell: /bin/bash
         state: present
 
-    - name: Create Gerrit home directory
+    - name: Ensure gerrit site directory
       file:
         path: "/home/gerrit/site"
+        owner: "gerrit"
+        group: "gerrit"
+        mode: '0755'
+        state: directory
+
+    - name: Ensure gerrit site etc directory
+      file:
+        path: "/home/gerrit/site/etc"
         owner: "gerrit"
         group: "gerrit"
         mode: '0755'
@@ -38,35 +46,35 @@
         mode: '0644'
         force: true
 
+    - name: Ensure gerrit.config
+      ansible.builtin.template:
+        src: gerrit.config.j2
+        dest: /home/gerrit/site/etc/gerrit.config
+        owner: gerrit
+        group: gerrit
+        mode: '0644'
+
+    - name: Ensure gitiles.config
+      ansible.builtin.template:
+        src: gitiles.config.j2
+        dest: /home/gerrit/site/etc/gitiles.config
+        owner: gerrit
+        group: gerrit
+        mode: '0644'
+
     - name: Initialize Gerrit site
       command: "java -jar /home/gerrit/gerrit.war init -d /home/gerrit/site --no-auto-start --install-all-plugins"
       become_user: "gerrit"
 
-    - name: Create Gerrit systemd service file
+    - name: Create gerrit systemd service file
       copy:
+        src: gerrit.service.j2
         dest: /etc/systemd/system/gerrit.service
-        content: |
-          [Unit]
-          Description=Gerrit Code Review
-          After=network.target
-
-          [Service]
-          Type=simple
-          Environment=GERRIT_SITE=/home/gerrit/site
-          ExecStart=/home/gerrit/site/bin/gerrit.sh run
-          ExecStop=/home/gerrit/site/bin/gerrit.sh stop
-          User=gerrit
-          Group=gerrit
-          StandardOutput=journal
-          StandardError=journal
-
-          [Install]
-          WantedBy=multi-user.target
         mode: '0644'
 
-    - name: Enable and start Gerrit service
+    - name: Enable and start gerrit service
       systemd:
         name: gerrit
         enabled: true
-        state: restarted
+        state: started
         daemon_reload: yes

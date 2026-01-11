@@ -1,0 +1,33 @@
+[gerrit]
+        basePath = git
+        canonicalWebUrl = https://{{ inventory_hostname }}/
+        serverId = {{ gerrit_server_id }}
+        serverName = {{ inventory_hostname }}
+        primaryWeblinkName = gitiles
+[container]
+        javaOptions = "-Dflogger.backend_factory=com.google.common.flogger.backend.log4j.Log4jBackendFactory#getInstance"
+        javaOptions = "-Dflogger.logging_context=com.google.gerrit.server.logging.LoggingContext#getInstance"
+        user = gerrit
+        javaHome = /usr/lib/jvm/java-21-openjdk-amd64
+[index]
+        type = lucene
+[auth]
+        type = OpenID_SSO
+        userNameCaseInsensitive = true
+        openIdSSOUrl = https://login.launchpad.net/+openid
+[receive]
+        enableSignedPush = false
+[sendemail]
+        smtpServer = {{ smtp_server }}
+        smtpServerPort = {{ smtp_port }}
+        smtpEncryption = tls
+        smtpUser = {{ smtp_user }}
+        smtpPass = {{ smtp_pass }}
+        from = Gerrit Code Review <gerrit@{{ inventory_hostname }}>
+[sshd]
+        listenAddress = *:22
+        advertisedAddress = {{ inventory_hostname }}
+[httpd]
+        listenUrl = proxy-https://127.0.0.1:8080/
+[cache]
+        directory = cache

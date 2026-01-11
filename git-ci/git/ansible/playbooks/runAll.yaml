@@ -1,6 +1,0 @@
----
-- import_playbook: updateOS.yaml
-- import_playbook: firewall.yaml
-#- import_playbook: cloudflaredGerritInstall.yaml
-#- import_playbook: cloudflaredJenkinsInstall.yaml
-#- import_playbook: cloudflaredAuthInstall.yaml

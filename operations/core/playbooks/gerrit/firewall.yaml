@@ -1,0 +1,34 @@
+---
+- name: Configure firewall rules
+  hosts: gerrit
+  become: yes
+  tasks:
+
+    - name: Allow Gerrit SSH
+      ufw:
+        rule: allow
+        port: 22
+        protocol: tcp
+
+    - name: Allow HTTP
+      ufw:
+        rule: allow
+        port: 80
+        protocol: tcp
+
+    - name: Allow HTTPS
+      ufw:
+        rule: allow
+        port: 443
+        protocol: tcp
+
+    - name: Allow custom SSH port
+      ufw:
+        rule: allow
+        port: "{{ ansible_port }}"
+        protocol: tcp
+
+    - name: Enable UFW
+      ufw:
+        state: enabled
+        policy: deny
