@@ -7,6 +7,7 @@ metadata:
     app: nginx-demo-hello
 spec:
   type: LoadBalancer
+  sessionAffinity: None
   ports:
     - port: 80
       targetPort: 80
