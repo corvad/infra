@@ -4,7 +4,7 @@ metadata:
   name: nginx-demo-hello
   namespace: nginx
 spec:
-  replicas: 2000
+  replicas: 1000
   selector:
     matchLabels:
       app: nginx-demo-hello
