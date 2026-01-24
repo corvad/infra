@@ -4,7 +4,7 @@ metadata:
   name: cloudflared-deployment
   namespace: cloudflared
 spec:
-  replicas: 100
+  replicas: 25 //max according to cloudflare docs
   selector:
     matchLabels:
       pod: cloudflared
