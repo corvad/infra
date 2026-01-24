@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus
+  namespace: metrics
+spec:
+  destination:
+    namespace: metrics
+    server: https://kubernetes.default.svc
+  project: metrics
+  source:
+    chart: kube-prometheus-stack
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: "81.22.2"
+    helm:
+      values: |
+        prometheus:
+          prometheusSpec:
+            retention: 24h
+            storageSpec:
+              volumeClaimTemplate:
+                spec:
+                  accessModes: ["ReadWriteOnce"]
+                  resources:
+                    requests:
+                      storage: 10Gi
+        grafana:
+          enabled: true
+          adminPassword: admin
+          persistence:
+            enabled: true
+            size: 10Gi
+  syncPolicy:
+    automated:
+      enabled: true
+      prune: true
+      selfHeal: true
