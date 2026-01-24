@@ -13,7 +13,7 @@ spec:
   source:
     chart: argo-cd
     repoURL: https://argoproj.github.io/argo-helm
-    targetRevision: 9.2.4
+    targetRevision: 9.3.5
     helm:
       values: |
         configs:
@@ -24,13 +24,13 @@ spec:
           enabled: true
 
         controller:
-          replicas: 1
+          replicas: 6
 
         server:
-          replicas: 2
+          replicas: 6
 
         repoServer:
-          replicas: 2
+          replicas: 6
   syncPolicy:
     automated:
       enabled: true
