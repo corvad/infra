@@ -1,23 +1,43 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nginx
+---
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: nginx-demo-hello
-  namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  namespace: nginx
 spec:
-  destination:
-    namespace: nginx
-    server: https://kubernetes.default.svc
-  project: nginx
-  source:
-    repoURL: https://github.com/corvad/infra
-    path: k3s-cluster/nginx-demo-hello
-    targetRevision: HEAD
-  syncPolicy:
-    automated:
-      enabled: true
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx-demo-hello
+  template:
+    metadata:
+      labels:
+        app: nginx-demo-hello
+    spec:
+      containers:
+        - name: nginx
+          image: nginxdemos/hello:latest
+          ports:
+            - containerPort: 8080
+              name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-demo-hello
+  namespace: nginx
+  labels:
+    app: nginx-demo-hello
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: nginx-demo-hello
