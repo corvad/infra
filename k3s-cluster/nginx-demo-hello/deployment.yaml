@@ -6,7 +6,7 @@ metadata:
   labels:
     app: nginx-demo-hello
 spec:
-  replicas: 30
+  replicas: 2
   selector:
     matchLabels:
       app: nginx-demo-hello
@@ -21,22 +21,3 @@ spec:
           ports:
             - containerPort: 8080
               name: http
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 10
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 5
-          resources:
-            requests:
-              cpu: 50m
-              memory: 64Mi
-            limits:
-              cpu: 100m
-              memory: 128Mi
