@@ -6,7 +6,7 @@ metadata:
   labels:
     app: nginx-demo-hello
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   sessionAffinity: None
   ports:
     - port: 80
